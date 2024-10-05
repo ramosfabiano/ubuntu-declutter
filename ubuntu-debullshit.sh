@@ -50,56 +50,6 @@ setup_flathub() {
     apt install --install-suggests gnome-software -y
 }
 
-gsettings_wrapper() {
-    if ! command -v dbus-launch; then
-        sudo apt install dbus-x11 -y
-    fi
-    sudo -Hu $(logname) dbus-launch gsettings "$@"
-}
-
-set_fonts() {
-	gsettings_wrapper set org.gnome.desktop.interface monospace-font-name "Monospace 10"
-}
-
-setup_vanilla_gnome() {
-    apt install qgnomeplatform-qt5 -y
-    apt install gnome-session fonts-cantarell adwaita-icon-theme gnome-backgrounds gnome-tweaks vanilla-gnome-default-settings gnome-shell-extension-manager -y && apt remove ubuntu-session yaru-theme-gnome-shell yaru-theme-gtk yaru-theme-icon yaru-theme-sound -y
-    set_fonts
-    restore_background
-}
-
-restore_background() {
-    gsettings_wrapper set org.gnome.desktop.background picture-uri 'file:///usr/share/backgrounds/gnome/blobs-l.svg'
-    gsettings_wrapper set org.gnome.desktop.background picture-uri-dark 'file:///usr/share/backgrounds/gnome/blobs-l.svg'
-}
-
-setup_julianfairfax_repo() {
-    command -v curl || apt install curl -y
-    curl -s https://julianfairfax.gitlab.io/package-repo/pub.gpg | gpg --dearmor | sudo dd of=/usr/share/keyrings/julians-package-repo.gpg
-    echo 'deb [ signed-by=/usr/share/keyrings/julians-package-repo.gpg ] https://julianfairfax.gitlab.io/package-repo/debs packages main' | sudo tee /etc/apt/sources.list.d/julians-package-repo.list
-    apt update
-}
-
-install_adwgtk3() {    
-    apt install adw-gtk3 -y
-    if command -v flatpak; then
-        flatpak install -y runtime/org.gtk.Gtk3theme.adw-gtk3-dark
-        flatpak install -y runtime/org.gtk.Gtk3theme.adw-gtk3
-    fi
-    if [ "$(gsettings_wrapper get org.gnome.desktop.interface color-scheme | tail -n 1)" == ''\''prefer-dark'\''' ]; then
-        gsettings_wrapper set org.gnome.desktop.interface gtk-theme adw-gtk3-dark
-        gsettings_wrapper set org.gnome.desktop.interface color-scheme prefer-dark
-    else
-        gsettings_wrapper set org.gnome.desktop.interface gtk-theme adw-gtk3
-    fi
-}
-
-install_icons() {
-    wget https://deb.debian.org/debian/pool/main/a/adwaita-icon-theme/adwaita-icon-theme_46.0-1_all.deb -O /tmp/adwaita-icon-theme.deb
-    apt install /tmp/adwaita-icon-theme.deb -y
-    apt install morewaita -y    
-}
-
 restore_firefox() {
     apt purge firefox -y
     snap remove --purge firefox
@@ -148,29 +98,15 @@ check_root_user() {
     fi
 }
 
-print_banner() {
-    echo '                                                                                                                                   
-    ▐            ▗            ▐     ▐       ▝▜  ▝▜      ▐    ▝   ▗   ▗  
-▗ ▗ ▐▄▖ ▗ ▗ ▗▗▖ ▗▟▄ ▗ ▗      ▄▟  ▄▖ ▐▄▖ ▗ ▗  ▐   ▐   ▄▖ ▐▗▖ ▗▄  ▗▟▄  ▐  
-▐ ▐ ▐▘▜ ▐ ▐ ▐▘▐  ▐  ▐ ▐     ▐▘▜ ▐▘▐ ▐▘▜ ▐ ▐  ▐   ▐  ▐ ▝ ▐▘▐  ▐   ▐   ▐  
-▐ ▐ ▐ ▐ ▐ ▐ ▐ ▐  ▐  ▐ ▐  ▀▘ ▐ ▐ ▐▀▀ ▐ ▐ ▐ ▐  ▐   ▐   ▀▚ ▐ ▐  ▐   ▐   ▝  
-▝▄▜ ▐▙▛ ▝▄▜ ▐ ▐  ▝▄ ▝▄▜     ▝▙█ ▝▙▞ ▐▙▛ ▝▄▜  ▝▄  ▝▄ ▝▄▞ ▐ ▐ ▗▟▄  ▝▄  ▐  
-                                                                                                      
- By @polkaulfield
- '
-}
-
 show_menu() {
     echo 'Choose what to do: '
     echo '1 - Apply everything (RECOMMENDED)'
     echo '2 - Disable Ubuntu report'
     echo '3 - Remove app crash popup'
     echo '4 - Remove snaps and snapd'
-    echo '5 - Disable terminal ads (LTS versions)'
+    echo '5 - Disable terminal ads'
     echo '6 - Install flathub and gnome-software'
     echo '7 - Install firefox from the Mozilla repo'
-    echo '8 - Install vanilla GNOME session'
-    echo '9 - Install adw-gtk3, morewaita and latest adwaita icons'
     echo 'q - Exit'
     echo
 }
@@ -178,7 +114,6 @@ show_menu() {
 main() {
     check_root_user
     while true; do
-        print_banner
         show_menu
         read -p 'Enter your choice: ' choice
         case $choice in
@@ -214,22 +149,6 @@ main() {
             restore_firefox
             msg 'Done!'
             ;;
-        8)
-            update_system
-            setup_vanilla_gnome
-            msg 'Done!'
-            ask_reboot
-            ;;
-
-        9)
-            update_system
-            setup_julianfairfax_repo
-            install_adwgtk3
-            install_icons
-            msg 'Done!'
-            ask_reboot
-            ;;
-
         q)
             exit 0
             ;;
@@ -257,14 +176,6 @@ auto() {
     setup_flathub
     msg 'Restoring Firefox from mozilla repository'
     restore_firefox
-    msg 'Installing vanilla Gnome session'
-    setup_vanilla_gnome
-    msg 'Adding julianfairfax repo'
-    setup_julianfairfax_repo
-    msg 'Install adw-gtk3 and set dark theme'
-    install_adwgtk3
-    msg 'Installing GNOME 46 and morewaita icons'
-    install_icons
     msg 'Cleaning up'
     cleanup
 }
