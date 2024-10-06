@@ -48,8 +48,6 @@ setup_flathub() {
 }
 
 restore_firefox() {
-    apt purge firefox -y
-    snap remove --purge firefox
 	add-apt-repository ppa:mozillateam/ppa -y
 	echo '
 Package: *
@@ -61,7 +59,7 @@ Pin-Priority: 1001
 }
 
 setup_zram() {
-    apt -y install zram-tools
+    apt install zram-tools -y
     echo -e "ALGO=zstd\nPERCENT=20" | sudo tee -a /etc/default/zramswap
     systemctl restart zramswap
     swapon -s
@@ -104,13 +102,7 @@ check_root_user() {
 
 show_menu() {
     echo 'Choose what to do: '
-    echo '1 - Apply everything (RECOMMENDED)'
-    echo '2 - Disable Ubuntu report'
-    echo '3 - Remove app crash popup'
-    echo '4 - Remove snaps and snapd'
-    echo '5 - Install flathub and gnome-software'
-    echo '6 - Install firefox and thunderbird from the Mozilla repo'
-    echo '7 - Setup zram.'
+    echo '1 - Apply everything.'
     echo 'q - Exit'
     echo
 }
@@ -125,33 +117,6 @@ main() {
             auto
             msg 'Done!'
             ask_reboot
-            ;;
-        2)
-            disable_ubuntu_report
-            msg 'Done!'
-            ;;
-        3)
-            remove_appcrash_popup
-            msg 'Done!'
-            ;;
-        4)
-            remove_snaps
-            msg 'Done!'
-            ask_reboot
-            ;;
-        5)
-            update_system
-            setup_flathub
-            msg 'Done!'
-            ask_reboot
-            ;;
-        6)
-            restore_firefox
-            msg 'Done!'
-            ;;
-        7)
-            setup_zram
-            msg 'Done!'
             ;;
         q)
             exit 0
@@ -168,21 +133,20 @@ main() {
 auto() {
     msg 'Updating system'
     update_system
+    msg 'Removing snaps and snapd'
+    remove_snaps
     msg 'Disabling ubuntu report'
     disable_ubuntu_report
     msg 'Removing annoying appcrash popup'
     remove_appcrash_popup
-    msg 'Removing snaps and snapd'
-    remove_snaps
     msg 'Setting up flathub'
     setup_flathub
-    msg 'Restoring Firefox and Thunderbird from mozilla repository'
+    msg 'Installing Firefox and Thunderbird from mozilla repository'
     restore_firefox
     msg 'Setting up zram'
     setup_zram
     msg 'Cleaning up'
     cleanup
-    update_system
 }
 
 (return 2> /dev/null) || main

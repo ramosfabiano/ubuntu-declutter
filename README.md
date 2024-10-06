@@ -1,6 +1,6 @@
 # ubuntu-debullshit!
   
-An automated script to debullshit and set-up Ubuntu 24.04 LTS for my personal use.
+An automated post-install script to set-up Ubuntu 24.04 LTS for my personal use.
 
 Tested with Ubuntu 24.04.1.
 
