@@ -26,11 +26,11 @@ remove_snaps() {
     for userpath in /home/*; do
         rm -rf $userpath/snap
     done
-    cat <<-EOF | tee /etc/apt/preferences.d/nosnap.pref
-	Package: snapd
-	Pin: release a=*
-	Pin-Priority: -10
-	EOF
+    echo '
+Package: snapd
+Pin: release a=*
+Pin-Priority: -10
+' > /etc/apt/preferences.d/nosnap.pref
 }
 
 update_system() {
@@ -73,8 +73,8 @@ setup_flathub() {
 }
 
 restore_firefox() {
-	add-apt-repository ppa:mozillateam/ppa -y
-	echo '
+    add-apt-repository ppa:mozillateam/ppa -y
+    echo '
 Package: *
 Pin: release o=LP-PPA-mozillateam
 Pin-Priority: 1001
@@ -93,7 +93,7 @@ setup_zram() {
 setup_tlp() {
     apt install tlp tlp-rdw smartmontools -y
     apt remove power-profiles-daemon -y
-	echo '
+    echo '
 TLP_ENABLE=1
 CPU_SCALING_GOVERNOR_ON_BAT=powersave
 RESTORE_THRESHOLDS_ON_BAT=1
