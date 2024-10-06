@@ -11,16 +11,18 @@ remove_appcrash_popup() {
 
 remove_snaps() {
     while [ "$(snap list | wc -l)" -gt 0 ]; do
-        for snap in $(snap list | tail -n +2 | cut -d ' ' -f 1); do
+        for snap in $(snap list  | grep -v base$ | grep -v snapd$ | tail -n +2 | cut -d ' ' -f 1); do
+            snap remove --purge "$snap"
+        done
+        for snap in $(snap list  |  tail -n +2 | cut -d ' ' -f 1); do
             snap remove --purge "$snap"
         done
     done
-
     systemctl stop snapd
-    systemctl disable snapd
+    systemctl disable snapdsna
     systemctl mask snapd
     apt purge snapd -y
-    rm -rf /snap /var/lib/snapd
+    rm -rf /snap /var/snap /var/lib/snapd /var/cache/snapd /usr/lib/snapd
     for userpath in /home/*; do
         rm -rf $userpath/snap
     done
@@ -29,6 +31,7 @@ remove_snaps() {
 	Pin: release a=*
 	Pin-Priority: -10
 	EOF
+    apt update
 }
 
 disable_terminal_ads() {
