@@ -65,6 +65,25 @@ setup_zram() {
     swapon -s
 }
 
+setup_tlp() {
+    apt install tlp tlp-rdw smartmontools -y
+    apt remove power-profiles-daemon -y
+	echo '
+TLP_ENABLE=1
+CPU_SCALING_GOVERNOR_ON_BAT=powersave
+START_CHARGE_THRESH_BAT0=60
+STOP_CHARGE_THRESH_BAT0=90
+RESTORE_THRESHOLDS_ON_BAT=1
+USB_AUTOSUSPEND=0
+USB_EXCLUDE_AUDIO=1
+USB_EXCLUDE_PHONE=1
+USB_EXCLUDE_BTUSB=1
+' > /etc/tlp.conf 
+    systemctl enable tlp.service
+    systemctl start tlp.service
+    systemctl mask systemd-rfkill.service systemd-rfkill.socket
+    tlp-stat -s
+}
 
 ask_reboot() {
     echo 'Reboot now? (y/n)'
@@ -139,6 +158,8 @@ auto() {
     disable_ubuntu_report
     msg 'Removing annoying appcrash popup'
     remove_appcrash_popup
+    msg 'Setting up TLP'
+    setup_tlp
     msg 'Setting up flathub'
     setup_flathub
     msg 'Installing Firefox and Thunderbird from mozilla repository'
