@@ -19,7 +19,7 @@ remove_snaps() {
         done
     done
     systemctl stop snapd
-    systemctl disable snapdsna
+    systemctl disable snapd
     systemctl mask snapd
     apt purge snapd -y
     rm -rf /snap /var/snap /var/lib/snapd /var/cache/snapd /usr/lib/snapd
@@ -32,11 +32,6 @@ remove_snaps() {
 	Pin-Priority: -10
 	EOF
     apt update
-}
-
-disable_terminal_ads() {
-    sed -i 's/ENABLED=1/ENABLED=0/g' /etc/default/motd-news
-    pro config set apt_news=false
 }
 
 update_system() {
@@ -107,9 +102,8 @@ show_menu() {
     echo '2 - Disable Ubuntu report'
     echo '3 - Remove app crash popup'
     echo '4 - Remove snaps and snapd'
-    echo '5 - Disable terminal ads'
-    echo '6 - Install flathub and gnome-software'
-    echo '7 - Install firefox from the Mozilla repo'
+    echo '5 - Install flathub and gnome-software'
+    echo '6 - Install firefox from the Mozilla repo'
     echo 'q - Exit'
     echo
 }
@@ -139,16 +133,12 @@ main() {
             ask_reboot
             ;;
         5)
-            disable_terminal_ads
-            msg 'Done!'
-            ;;
-        6)
             update_system
             setup_flathub
             msg 'Done!'
             ask_reboot
             ;;
-        7)
+        6)
             restore_firefox
             msg 'Done!'
             ;;
@@ -171,8 +161,6 @@ auto() {
     disable_ubuntu_report
     msg 'Removing annoying appcrash popup'
     remove_appcrash_popup
-    msg 'Removing terminal ads (if they are enabled)'
-    disable_terminal_ads
     msg 'Deleting snaps'
     remove_snaps
     msg 'Setting up flathub'
