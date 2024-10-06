@@ -41,10 +41,15 @@ cleanup() {
     apt autoremove -y
 }
 
+install_basic_packages() {
+    apt install vim net-tools rsync openssh-server -y
+    apt install --install-suggests gnome-software -y
+}
+
 setup_flathub() {
     apt install flatpak -y
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    apt install --install-suggests gnome-software -y
+    flatpak install com.github.tchx84.Flatseal -y
 }
 
 restore_firefox() {
@@ -83,6 +88,16 @@ USB_EXCLUDE_BTUSB=1
     systemctl start tlp.service
     systemctl mask systemd-rfkill.service systemd-rfkill.socket
     tlp-stat -s
+}
+
+setup_firewall() {
+    apt install ufw gufw -y
+    systemctl stop ssh.socket ssh
+    systemctl disable ssh
+    ufw enable    
+    ufw default deny incoming
+    ufw default allow outgoing
+    ufw status verbose
 }
 
 ask_reboot() {
@@ -140,7 +155,6 @@ main() {
         q)
             exit 0
             ;;
-
         *)
             error_msg 'Wrong input!'
             ;;
@@ -150,22 +164,26 @@ main() {
 }
 
 auto() {
+    msg 'Disabling ubuntu report'
+    disable_ubuntu_report
+    msg 'Removing annoying appcrash popup'
+    remove_appcrash_popup    
     msg 'Updating system'
     update_system
     msg 'Removing snaps and snapd'
     remove_snaps
-    msg 'Disabling ubuntu report'
-    disable_ubuntu_report
-    msg 'Removing annoying appcrash popup'
-    remove_appcrash_popup
+    msg 'Setting up zram'
+    setup_zram    
+    msg 'Installing basic packages'
+    install_basic_packages
+    msg 'Setting up flathub'
+    setup_flathub    
     msg 'Setting up TLP'
     setup_tlp
-    msg 'Setting up flathub'
-    setup_flathub
+    msg 'Setting up firewall'
+    setup_firewall
     msg 'Installing Firefox and Thunderbird from mozilla repository'
     restore_firefox
-    msg 'Setting up zram'
-    setup_zram
     msg 'Cleaning up'
     cleanup
 }
