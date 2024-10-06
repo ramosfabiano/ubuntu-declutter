@@ -48,10 +48,13 @@ install_basic_packages() {
 
 install_extra_packages() {
     apt install ntp flatpak vim net-tools vim build-essential ffmpeg  rar unrar  \
-	 	p7zip-rar libavcodec-extra gstreamer1.0-*  gstreamer1.0-plugins* gnome-shell-extension-appindicator tigervnc-viewer dnsutils \
-	 	meld astyle podman inxi vlc texlive-extra-utils graphicsmagick-imagemagick-compat  python3-pip pipx    \
-		apt-transport-https ca-certificates curl software-properties-common wget fonts-liberation libu2f-udev libvulkan1 \
-		freeplane git xsel gnome-tweaks gnome-shell-extension-prefs gnome-shell-extensions hplip keepassxc distrobox -y
+	 	p7zip-rar libavcodec-extra gstreamer1.0-* gstreamer1.0-plugins* \
+        gnome-shell-extension-appindicator tigervnc-viewer dnsutils \
+	 	meld astyle podman inxi vlc texlive-extra-utils graphicsmagick-imagemagick-compat  \
+        python3-pip pipx apt-transport-https ca-certificates curl software-properties-common wget \
+        fonts-liberation libu2f-udev libvulkan1 \
+		freeplane git xsel gnome-tweaks gnome-shell-extension-prefs gnome-shell-extensions \
+        hplip keepassxc distrobox -y
 }
 
 setup_fonts() {
@@ -143,6 +146,9 @@ install_qemu() {
         virtinst qemu-utils virt-viewer spice-client-gtk gir1.2-spice* ebtables swtpm swtpm-tools ovmf virtiofsd -y
 	virsh net-autostart default
     modprobe vhost_net    
+    for userpath in /home/*; do
+        usermod -a -G libvirt,kvm $(basename $userpath)
+    done    
 }
 
 setup_firewall() {
