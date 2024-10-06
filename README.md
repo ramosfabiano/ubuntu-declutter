@@ -13,3 +13,5 @@ You can download the script from the repo or use this one-liner command, there a
 `sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/ramosfabiano/ubuntu-debullshit/main/ubuntu-debullshit.sh)"`
 
 After the install, reboot and enjoy.
+
+*The script is NOT idempotent.*

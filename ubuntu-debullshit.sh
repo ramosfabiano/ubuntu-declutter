@@ -173,7 +173,7 @@ auto() {
     remove_appcrash_popup
     msg 'Removing terminal ads (if they are enabled)'
     disable_terminal_ads
-    msg 'Deleting everything snap related'
+    msg 'Deleting snaps'
     remove_snaps
     msg 'Setting up flathub'
     setup_flathub
