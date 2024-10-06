@@ -58,7 +58,7 @@ install_extra_packages() {
         python3-pip pipx apt-transport-https ca-certificates curl software-properties-common wget \
         fonts-liberation libu2f-udev libvulkan1 \
 		freeplane git xsel gnome-tweaks gnome-shell-extension-prefs gnome-shell-extensions \
-        hplip keepassxc distrobox -y
+        hplip keepassxc distrobox synaptic -y
 }
 
 setup_fonts() {
