@@ -31,7 +31,6 @@ remove_snaps() {
 	Pin: release a=*
 	Pin-Priority: -10
 	EOF
-    apt update
 }
 
 update_system() {
@@ -61,6 +60,14 @@ Pin-Priority: 1000
     apt update
     apt install firefox thunderbird -y
 }
+
+setup_zram() {
+    apt -y install zram-tools
+    echo -e "ALGO=zstd\nPERCENT=20" | sudo tee -a /etc/default/zramswap
+    systemctl restart zramswap
+    swapon -s
+}
+
 
 ask_reboot() {
     echo 'Reboot now? (y/n)'
@@ -104,6 +111,7 @@ show_menu() {
     echo '4 - Remove snaps and snapd'
     echo '5 - Install flathub and gnome-software'
     echo '6 - Install firefox and thunderbird from the Mozilla repo'
+    echo '7 - Setup zram.'
     echo 'q - Exit'
     echo
 }
@@ -142,6 +150,10 @@ main() {
             restore_firefox
             msg 'Done!'
             ;;
+        7)
+            setup_zram
+            msg 'Done!'
+            ;;
         q)
             exit 0
             ;;
@@ -167,8 +179,11 @@ auto() {
     setup_flathub
     msg 'Restoring Firefox and Thunderbird from mozilla repository'
     restore_firefox
+    msg 'Setting up zram'
+    setup_zram
     msg 'Cleaning up'
     cleanup
+    update_system
 }
 
 (return 2> /dev/null) || main
