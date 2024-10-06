@@ -41,6 +41,10 @@ cleanup() {
     apt autoremove -y
 }
 
+install_oem_kernel() {
+    apt install linux-oem-24.04 -y
+}
+
 install_basic_packages() {
     apt install vim net-tools rsync openssh-server -y
     apt install --install-suggests gnome-software -y
@@ -197,7 +201,8 @@ check_root_user() {
 
 show_menu() {
     echo 'Choose what to do: '
-    echo '1 - Apply everything.'
+    echo '1 - Run script.'
+    echo '2 - Install OEM kernel.'
     echo 'q - Exit'
     echo
 }
@@ -210,6 +215,11 @@ main() {
         case $choice in
         1)
             auto
+            msg 'Done!'
+            ask_reboot
+            ;;
+        2)
+            install_oem_kernel
             msg 'Done!'
             ask_reboot
             ;;
