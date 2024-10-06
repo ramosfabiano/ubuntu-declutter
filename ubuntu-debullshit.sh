@@ -50,7 +50,7 @@ setup_flathub() {
 restore_firefox() {
     apt purge firefox -y
     snap remove --purge firefox
-	sudo add-apt-repository ppa:mozillateam/ppa 
+	add-apt-repository ppa:mozillateam/ppa -y
 	echo '
 Package: *
 Pin: release o=LP-PPA-mozillateam
@@ -172,7 +172,7 @@ auto() {
     disable_ubuntu_report
     msg 'Removing annoying appcrash popup'
     remove_appcrash_popup
-    msg 'Deleting snaps'
+    msg 'Removing snaps and snapd'
     remove_snaps
     msg 'Setting up flathub'
     setup_flathub
