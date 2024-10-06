@@ -57,8 +57,8 @@ install_extra_packages() {
 	 	meld astyle podman inxi vlc texlive-extra-utils graphicsmagick-imagemagick-compat  \
         python3-pip pipx apt-transport-https ca-certificates curl software-properties-common wget \
         fonts-liberation libu2f-udev libvulkan1 \
-		freeplane git xsel gnome-tweaks gnome-shell-extension-prefs gnome-shell-extensions \
-        hplip keepassxc distrobox synaptic -y
+		git xsel gnome-tweaks gnome-shell-extension-prefs gnome-shell-extensions \
+        hplip keepassxc distrobox synaptic default-jre -y
 }
 
 setup_fonts() {
@@ -139,6 +139,10 @@ install_vscode() {
 
 install_codium() {
     flatpak install app/com.vscodium.codium/x86_64/stable -y
+}
+
+install_freeplane() {
+    flatpak install org.freeplane.App -y
 }
 
 install_qemu() {
@@ -267,6 +271,8 @@ auto() {
     install_vscode
     msg 'Install codium'
     install_codium
+    msg 'Install freeplane'
+    install_freeplane
     msg 'Install qemu'
     install_qemu
     msg 'Cleaning up'
