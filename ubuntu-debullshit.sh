@@ -46,6 +46,14 @@ install_basic_packages() {
     apt install --install-suggests gnome-software -y
 }
 
+install_extra_packages() {
+    apt install ntp flatpak vim net-tools vim build-essential ffmpeg  rar unrar  \
+	 	p7zip-rar libavcodec-extra gstreamer1.0-*  gstreamer1.0-plugins* gnome-shell-extension-appindicator tigervnc-viewer dnsutils \
+	 	meld astyle podman inxi vlc texlive-extra-utils graphicsmagick-imagemagick-compat  python3-pip pipx    \
+		apt-transport-https ca-certificates curl software-properties-common wget fonts-liberation libu2f-udev libvulkan1 \
+		freeplane git xsel -y
+}
+
 setup_flathub() {
     apt install flatpak -y
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -184,6 +192,8 @@ auto() {
     setup_firewall
     msg 'Installing Firefox and Thunderbird from mozilla repository'
     restore_firefox
+    msg 'Installing extra packages'
+    install_extra_packages
     msg 'Cleaning up'
     cleanup
 }
