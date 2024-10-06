@@ -101,6 +101,50 @@ USB_EXCLUDE_BTUSB=1
     tlp-stat -s
 }
 
+install_chrome() {
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    apt install ./google-chrome-stable_current_amd64.deb -y
+    rm -f google-chrome-stable_current_amd64.deb
+}
+
+install_veracrypt() {
+    export VC_VERSION="1.26.14"
+    wget https://launchpad.net/veracrypt/trunk/$VC_VERSION/+download/veracrypt-$VC_VERSION-Ubuntu-24.04-amd64.deb
+    wget https://launchpad.net/veracrypt/trunk/$VC_VERSION/+download/veracrypt-$VC_VERSION-Ubuntu-24.04-amd64.deb.sig
+    wget https://www.idrix.fr/VeraCrypt/VeraCrypt_PGP_public_key.asc
+    gpg --import VeraCrypt_PGP_public_key.asc
+    gpg --verify veracrypt-$VC_VERSION-Ubuntu-24.04-amd64.deb.sig
+    apt install ./veracrypt-$VC_VERSION-Ubuntu-24.04-amd64.deb -y
+    rm -f veracrypt-$VC_VERSION-Ubuntu-24.04-amd64.deb
+    rm -f veracrypt-$VC_VERSION-Ubuntu-24.04-amd64.deb.sig
+    rm -f VeraCrypt_PGP_public_key.asc
+    rm -f VeraCrypt_PGP_public_key.asc.1   
+}
+
+install_vscode() {
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+    install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
+    sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+    rm -f packages.microsoft.gpg
+    apt update -y
+    apt install code -y
+}
+
+install_codium() {
+    flatpak install app/com.vscodium.codium/x86_64/stable -y
+}
+
+install_qemu() {
+    systemctl stop pcscd.socket
+    systemctl stop pcscd
+    systemctl disable pcscd
+    systemctl mask pcscd
+    apt install qemu-system qemu-kvm libvirt-daemon libvirt-clients bridge-utils virt-manager libvirt-daemon-system \
+        virtinst qemu-utils virt-viewer spice-client-gtk gir1.2-spice* ebtables swtpm swtpm-tools ovmf virtiofsd -y
+	virsh net-autostart default
+    modprobe vhost_net    
+}
+
 setup_firewall() {
     apt install ufw gufw -y
     systemctl stop ssh.socket ssh
@@ -199,6 +243,16 @@ auto() {
     install_extra_packages
     msg 'Install MS fonts'
     setup_fonts
+    msg 'Install chrome'
+    install_chrome
+    msg 'Install veracrypt'
+    install_veracrypt
+    msg 'Install code'
+    install_vscode
+    msg 'Install codium'
+    install_codium
+    msg 'Install qemu'
+    install_qemu
     msg 'Cleaning up'
     cleanup
 }
