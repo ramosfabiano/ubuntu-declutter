@@ -50,12 +50,11 @@ setup_flathub() {
 restore_firefox() {
     apt purge firefox -y
     snap remove --purge firefox
-    wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- > /etc/apt/keyrings/packages.mozilla.org.asc
-    echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" > /etc/apt/sources.list.d/mozilla.list 
-    echo '
+	sudo add-apt-repository ppa:mozillateam/ppa 
+	echo '
 Package: *
-Pin: origin packages.mozilla.org
-Pin-Priority: 1000
+Pin: release o=LP-PPA-mozillateam
+Pin-Priority: 1001
 ' > /etc/apt/preferences.d/mozilla
     apt update
     apt install firefox thunderbird -y
