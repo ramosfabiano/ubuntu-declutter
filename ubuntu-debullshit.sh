@@ -59,7 +59,7 @@ Pin: origin packages.mozilla.org
 Pin-Priority: 1000
 ' > /etc/apt/preferences.d/mozilla
     apt update
-    apt install firefox -y
+    apt install firefox thunderbird -y
 }
 
 ask_reboot() {
@@ -103,7 +103,7 @@ show_menu() {
     echo '3 - Remove app crash popup'
     echo '4 - Remove snaps and snapd'
     echo '5 - Install flathub and gnome-software'
-    echo '6 - Install firefox from the Mozilla repo'
+    echo '6 - Install firefox and thunderbird from the Mozilla repo'
     echo 'q - Exit'
     echo
 }
@@ -165,7 +165,7 @@ auto() {
     remove_snaps
     msg 'Setting up flathub'
     setup_flathub
-    msg 'Restoring Firefox from mozilla repository'
+    msg 'Restoring Firefox and Thunderbird from mozilla repository'
     restore_firefox
     msg 'Cleaning up'
     cleanup
