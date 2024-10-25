@@ -142,7 +142,8 @@ install_codium() {
 }
 
 install_freeplane() {
-    flatpak install org.freeplane.App -y
+    #flatpak install org.freeplane.App -y
+    apt install freeplane openjdk-17-jdk -y
 }
 
 install_qemu() {
