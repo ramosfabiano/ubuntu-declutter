@@ -14,4 +14,4 @@ You can download the script from the repo or use this one-liner command, there a
 
 After the install, reboot and enjoy.
 
-*The script is NOT idempotent.*
+*Note: this script is NOT idempotent.*
