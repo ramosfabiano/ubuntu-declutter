@@ -1,4 +1,4 @@
-# ubuntu-debullshit!
+# ubuntu-declutter
   
 An automated post-install script to set-up Ubuntu 24.04 LTS for my personal use.
 
