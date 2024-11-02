@@ -137,10 +137,6 @@ install_vscode() {
     apt install code -y
 }
 
-install_codium() {
-    flatpak install app/com.vscodium.codium/x86_64/stable -y
-}
-
 install_freeplane() {
     #flatpak install org.freeplane.App -y
     apt install freeplane openjdk-17-jdk -y
@@ -270,8 +266,6 @@ auto() {
     install_veracrypt
     msg 'Install code'
     install_vscode
-    msg 'Install codium'
-    install_codium
     msg 'Install freeplane'
     install_freeplane
     msg 'Install qemu'
