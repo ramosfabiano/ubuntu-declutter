@@ -181,6 +181,7 @@ ask_reboot() {
 }
 
 msg() {
+    sleep 5
     tput setaf 2
     echo "[*] $1"
     tput sgr0
