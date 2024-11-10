@@ -139,7 +139,10 @@ install_vscode() {
 
 install_freeplane() {
     #flatpak install org.freeplane.App -y
-    apt install freeplane openjdk-17-jdk -y
+    #apt install freeplane openjdk-17-jdk -y
+    export FP_VERSION="1.12.6"
+    wget https://sourceforge.net/projects/freeplane/files/freeplane%20stable/freeplane_$FP_VERSION~upstream-1_all.deb
+    sudo apt install openjdk-17-jdk ./freeplane_$FP_VERSION~upstream-1_all.deb -y
 }
 
 install_qemu() {
