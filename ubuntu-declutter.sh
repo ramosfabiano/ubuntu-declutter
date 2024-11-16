@@ -54,11 +54,18 @@ install_extra_packages() {
     apt install ntp flatpak vim net-tools vim build-essential ffmpeg  rar unrar  \
 	 	p7zip-rar libavcodec-extra gstreamer1.0-* gstreamer1.0-plugins* \
         gnome-shell-extension-appindicator tigervnc-viewer dnsutils \
-	 	meld astyle podman inxi vlc texlive-extra-utils graphicsmagick-imagemagick-compat  \
+	 	meld astyle inxi vlc texlive-extra-utils graphicsmagick-imagemagick-compat  \
         python3-pip pipx apt-transport-https ca-certificates curl software-properties-common wget \
         fonts-liberation libu2f-udev libvulkan1 \
 		git xsel gnome-tweaks gnome-shell-extension-prefs gnome-shell-extensions \
-        hplip keepassxc distrobox synaptic default-jre -y
+        hplip keepassxc  synaptic default-jre -y
+}
+
+setup_podman() {
+    apt install podman podman-docker distrobox -y
+    echo '
+unqualified-search-registries = ["docker.io"]
+' >> /etc/containers/registries.conf
 }
 
 setup_fonts() {
@@ -262,6 +269,8 @@ auto() {
     restore_firefox
     msg 'Installing extra packages'
     install_extra_packages
+    msg 'Setup podman'
+    setup_podman
     msg 'Install MS fonts'
     setup_fonts
     msg 'Install chrome'
