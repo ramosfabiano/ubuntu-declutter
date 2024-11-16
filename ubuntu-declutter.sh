@@ -159,7 +159,7 @@ install_qemu() {
     systemctl mask pcscd
     apt install qemu-system qemu-kvm libvirt-daemon libvirt-clients bridge-utils virt-manager libvirt-daemon-system \
         virtinst qemu-utils virt-viewer spice-client-gtk gir1.2-spice* ebtables swtpm swtpm-tools ovmf virtiofsd -y
-	virsh net-autostart default
+    virsh net-autostart default
     modprobe vhost_net    
     for userpath in /home/*; do
         usermod -a -G libvirt,kvm $(basename $userpath)
