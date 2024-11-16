@@ -62,7 +62,7 @@ install_extra_packages() {
 }
 
 setup_podman() {
-    apt install podman podman-docker distrobox -y
+    apt install podman podman-docker podman-compose distrobox -y
     echo '
 unqualified-search-registries = ["docker.io"]
 ' >> /etc/containers/registries.conf
